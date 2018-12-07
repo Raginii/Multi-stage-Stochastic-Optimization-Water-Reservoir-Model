@@ -69,6 +69,7 @@ print("winflow = ",winflow)
 
 wlist = stochInflowData.index.tolist()
 slist = stochInflowData.columns.tolist()
+print("slist =",slist)
 swinflow = {}
 for s in slist:
     swinflowlist = stochInflowData[s].tolist()
@@ -120,3 +121,11 @@ print("gencost = ",gencost)
 
 capacityKeys = capacity.keys()
 print("capacityKeys = ",capacityKeys)
+demandNew = {a:0 for a in wlist}
+exchangeNew = {a:0 for a in wlist}
+for (x,y) in wt:
+    demandNew[x] += demand[y]
+    exchangeNew[x] += exchnage[y] 
+print("demandNew = ",demandNew)
+print("exchangeNew =",exchangeNew)
+
