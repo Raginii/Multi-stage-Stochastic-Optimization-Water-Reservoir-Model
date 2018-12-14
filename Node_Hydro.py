@@ -59,7 +59,7 @@ root = [0]
 p = {}
 ####
 w = w[:8]
-s = s[:3]
+#s = s[:3]
 p[0] = 1
 timeN[0] = 'w0'
 for weeks in w:
