@@ -49,8 +49,10 @@ wexchange = {a:0 for a in wlist}
 for (x,y) in wt:
     wdemand[x] += demand[y]
     wexchange[x] += exchange[y] 
-    
-#print(winflow)
+    # for f in ft:
+    # 	wcapacity[x,f] += capacity[y,f]
+capacity = data.wcapacity   
+#print(wcapacity)
 ##########################################################
 #Creating Model
 m = Model('SDDP_Hydro')

@@ -59,7 +59,7 @@ m = Model('DeterministicDam')
 #Creating variables
 gap = m.addVars(t,name = 'gap') ##Gap generation in T
 res = m.addVars(t,name = 'res') ##reservoir energy level at end in T
-spill = m.addVars(t,name = 'spill') ##Spillafe in hour t
+spill = m.addVars(t,name = 'spill') ##Spillage in hour t
 x = m.addVars(t,ft,name = 'x') ##Generated power in hour t with ft
 slackup = m.addVars(t,name = 'slackup') ##Slack for the upper level
 slacklo = m.addVars(t,name = 'slacklo') ##Slack for the lower level

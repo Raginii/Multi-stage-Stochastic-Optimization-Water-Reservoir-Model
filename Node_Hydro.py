@@ -35,19 +35,19 @@ wt = data.wt
 # first = tuplelist(first)
 # last = tuplelist(last)
 
-inflow = data.inflow  ## Not used 
-capacity = data.wcapacity
-gencost = data.wgencost  ## Weekly 
-capacityKeys = capacity.keys()
-
 demandNew = {a:0 for a in wlist}
 exchangeNew = {a:0 for a in wlist}
+wcapacity = data.wcapacity# {(a,f):0 for a in wlist for f in ft}
+
 for (x,y) in wt:
     demandNew[x] += demand[y]
     exchangeNew[x] += exchange[y] 
-print(demandNew)
-print(exchangeNew)
 s = data.slist # Contains the list pf scenarios
+
+inflow = data.inflow  ## Not used 
+capacity = wcapacity #data.wcapacity
+gencost = data.wgencost  ## Weekly 
+capacityKeys = capacity.keys()
 
 
 n= [] # Node List
