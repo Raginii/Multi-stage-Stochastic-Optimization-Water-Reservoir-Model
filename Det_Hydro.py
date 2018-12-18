@@ -1,6 +1,6 @@
 from gurobipy import *
 import pandas as pd
-
+import time
 import project_data as data
 
 t = data.t
@@ -51,11 +51,11 @@ for (x,y) in wt:
     wexchange[x] += exchange[y] 
    
 
-print(winflow)
+#print(winflow)
 ##########################################################
 #Creating Model
 m = Model('DeterministicDam')
-
+start = time.time()
 #Creating variables
 gap = m.addVars(t,name = 'gap') ##Gap generation in T
 res = m.addVars(t,name = 'res') ##reservoir energy level at end in T
@@ -68,12 +68,12 @@ slacklo = m.addVars(t,name = 'slacklo') ##Slack for the lower level
 m.update()
 
 #Creating constraints
-m.addConstrs(((res[i] - res[t[t.index(i)-1]] + x[i,'Hydro'] + spill[i] == winflow[i]) for i in t if i!= 'w1') , "Hydraulic continuity" )
+m.addConstrs(((res[i] - res[t[t.index(i)-1]] + x[i,'Hydro'] + spill[i] == winflow[i]*5) for i in t if i!= 'w1') , "Hydraulic continuity" )
 m.addConstrs(((quicksum(x[i,f] for f in ft if (i,f) in capacityKeys)  + gap[i] >= wdemand[i] - wexchange[i]) for i in t) , "Demand Satisfaction" )
 m.addConstrs(((-res[i] + slackup[i] >= -resmax) for i in t) , "Maximum reservoir level" )
 m.addConstrs(((res[i] + slacklo[i] >= resmin) for i in t) , "Minimum reservoir level" )
 m.addConstrs(((-x[i,f] >= -capacity[i,f]) for i in t for f in ft if (i,f) in capacityKeys) , "Minimum reservoir level" )
-m.addConstr(((res['w1'] - resmin + x['w1','Hydro'] + spill['w1'] == winflow['w1']) ) , "Hydraulic continuity" )
+m.addConstr(((res['w1'] - resmin + x['w1','Hydro'] + spill['w1'] == winflow['w1']*5) ) , "Hydraulic continuity" )
 #Setting objective
 m.setObjective(
         (
@@ -96,3 +96,5 @@ if status == GRB.Status.OPTIMAL:
     print('The optimal objective is %g' % m.objVal)
 if status != GRB.Status.INF_OR_UNBD and status != GRB.Status.INFEASIBLE:
     print('Optimization was stopped with status %d' % status)
+totTime = time.time() - start
+print("The deterministic model solved in : {:.2f}".format(totTime) ,"seconds")

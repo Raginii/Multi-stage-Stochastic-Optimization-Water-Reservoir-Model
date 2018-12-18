@@ -59,69 +59,72 @@ for f in flist:
     for j in wlist:
         wprices[(j,f)] = wpricelist[wlist.index(j)]
 
-# #print("wpricelist = ",wpricelist)
-# print("wprices = ",wprices)
+#print("wpricelist = ",wpricelist)
+print("wprices = ",wprices)
 
-# wlist = inflowData.iloc[:,0].tolist()
-# winflow = inflowData.iloc[:,1].tolist()
-# winflow = {i:winflow[wlist.index(i)] for i in wlist}
-# print("winflow = ",winflow)
+wlist = inflowData.iloc[:,0].tolist()
+winflow = inflowData.iloc[:,1].tolist()
+winflow = {i:winflow[wlist.index(i)] for i in wlist}
+print("winflow = ",winflow)
 
-# wlist = stochInflowData.index.tolist()
-# slist = stochInflowData.columns.tolist()
-# print("slist =",slist)
-# swinflow = {}
-# for s in slist:
-#     swinflowlist = stochInflowData[s].tolist()
-#     for j in wlist:
-#         swinflow[(s,j)] = swinflowlist[wlist.index(j)]
-# print("swinflow = ",swinflow)
+wlist = stochInflowData.index.tolist()
+slist = stochInflowData.columns.tolist()
+print("slist =",slist)
+swinflow = {}
+for s in slist:
+    swinflowlist = stochInflowData[s].tolist()
+    for j in wlist:
+        swinflow[(s,j)] = swinflowlist[wlist.index(j)]
+for i,j in swinflow:
+	swinflow[(i,j)] = 2*swinflowlist[i,j] + (3*winflow[j])
 
-# resmax = {i:106.2e6 if i!='t8736' else 87e6 for i in t}
-# resmin = {i:10e6 if i!='t8736' else 87e6 for i in t}
-# print("resmax = ",resmax)
-# print("resmin = ",resmin)
-# wt = []
-# last = []
-# first = []
-# p=0
-# for i in w:
-#     for j in h:
-#         wt.append((i,t[p]))
-#         if h.index(j)==0:
-#             last.append((i,t[p]))
-#         if h.index(j)==len(h)-1:
-#             first.append((i,t[p]))
-#         p = p+1    
+print("swinflow = ",swinflow)
 
-# # wt = tuplelist(wt)
-# # first = tuplelist(first)
-# # last = tuplelist(last)
+resmax = {i:106.2e6 if i!='t8736' else 87e6 for i in t}
+resmin = {i:10e6 if i!='t8736' else 87e6 for i in t}
+print("resmax = ",resmax)
+print("resmin = ",resmin)
+wt = []
+last = []
+first = []
+p=0
+for i in w:
+    for j in h:
+        wt.append((i,t[p]))
+        if h.index(j)==0:
+            last.append((i,t[p]))
+        if h.index(j)==len(h)-1:
+            first.append((i,t[p]))
+        p = p+1    
 
-# print("wt = ",wt)
-# print("first = ",first)
-# print("last = ",last)
+# wt = tuplelist(wt)
+# first = tuplelist(first)
+# last = tuplelist(last)
 
-# inflow = {i:sum(winflow[j] for j in w if (j,i) in wt)/len(h) for i in t}
-# print("inflow = ", inflow)
-# capacity = {(i,f):sum(wcapacity[j,f] for j in w if (j,i) in wt) for i in t for f in ft}
-# print("capacity = ", capacity)
-# gencost = {(i,f):0 if f=="Hydro" else 15 for i in t for f in ["Hydro","Nuclear"] }
+print("wt = ",wt)
+print("first = ",first)
+print("last = ",last)
 
-# for i in t:
-#     gencost[(i,"HardCoal")] = sum(wprices[j,"HardCoal"] for j in w if (j,i) in wt) + ((2.361*sum(wprices[j,'CO2'] for j in w if (j,i) in wt))/(6.98*0.39))
-# print("gencost = ",gencost)
-# capacityKeys = capacity.keys()
-# print("capacityKeys = ",capacityKeys)
+inflow = {i:sum(winflow[j] for j in w if (j,i) in wt)/len(h) for i in t}
+print("inflow = ", inflow)
+capacity = {(i,f):sum(wcapacity[j,f] for j in w if (j,i) in wt) for i in t for f in ft}
+print("capacity = ", capacity)
+gencost = {(i,f):0 if f=="Hydro" else 15 for i in t for f in ["Hydro","Nuclear"] }
 
-# ### For multistage scenario/node based : Weekly
-# demandNew = {a:0 for a in wlist}
-# exchangeNew = {a:0 for a in wlist}
-# for (x,y) in wt:
-#     demandNew[x] += demand[y]
-#     exchangeNew[x] += exchnage[y] 
-# print("demandNew = ",demandNew)
-# print("exchangeNew =",exchangeNew)
+for i in t:
+    gencost[(i,"HardCoal")] = sum(wprices[j,"HardCoal"] for j in w if (j,i) in wt) + ((2.361*sum(wprices[j,'CO2'] for j in w if (j,i) in wt))/(6.98*0.39))
+print("gencost = ",gencost)
+capacityKeys = capacity.keys()
+print("capacityKeys = ",capacityKeys)
+
+### For multistage scenario/node based : Weekly
+demandNew = {a:0 for a in wlist}
+exchangeNew = {a:0 for a in wlist}
+for (x,y) in wt:
+    demandNew[x] += demand[y]
+    exchangeNew[x] += exchnage[y] 
+print("demandNew = ",demandNew)
+print("exchangeNew =",exchangeNew)
 
 ## Weekly cost
 wgencost = {}
